@@ -245,7 +245,7 @@
                 <img alt="image"
                     src="{{ asset('img/avatar/avatar-1.png') }}"
                     class="rounded-circle mr-1">
-                <div class="d-sm-none d-lg-inline-block">Hi, Ujang Maman</div>
+                <div class="d-sm-none d-lg-inline-block">Hi, {{ auth()->user()->name }}</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 <div class="dropdown-title">Logged in 5 min ago</div>
@@ -263,9 +263,14 @@
                 </a>
                 <div class="dropdown-divider"></div>
                 <a href="#"
-                    class="dropdown-item has-icon text-danger">
+                    class="dropdown-item has-icon text-danger"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
+                {{-- display none logout form, agar bisa di eksekusi method logout nya. Jadi di eksekusi di atas event onClick--}}
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </div>
         </li>
     </ul>
