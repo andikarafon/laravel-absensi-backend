@@ -24,7 +24,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.users.create');
     }
 
     /**
@@ -32,7 +32,23 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'role' => $request->role,
+            'password' => Hash::make($request->password),
+            'position' => $request->position,
+            'department' => $request->department,
+        ]);
+
+        return redirect()->route('users.index')->with('success', 'User created successfully');
     }
 
     /**
@@ -46,24 +62,44 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $user)
     {
-        //
+        return view('pages.users.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'role' => $request->role,
+            'position' => $request->position,
+            'department' => $request->department,
+        ]);
+
+        //if password filled
+        if ($request->password) {
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+        }
+
+        return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    //destroy
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return redirect()->route('users.index')->with('success', 'User deleted successfully');
     }
 }
