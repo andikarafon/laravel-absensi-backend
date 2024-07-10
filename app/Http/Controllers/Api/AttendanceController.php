@@ -63,4 +63,17 @@ class AttendanceController extends Controller
 
     }
 
+//check is checkedin
+public function isCheckedin(Request $request)
+{
+    //get today attendance
+    $attendance = Attendance::where('user_id', $request->user()->id)
+        ->where('date', date('Y-m-d'))
+        ->first();
+
+        return response([
+            'checkedin' => $attendance ? true : false,
+        ], 200);
+}
+
 }
